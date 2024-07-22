@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="创建群组"
+                android:text="Create group"
                 tools:ignore="HardcodedText" />
 
             <Button
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="移除群组"
+                android:text="Remove group"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="启动监听"
+            android:text="Start listening"
             tools:ignore="HardcodedText" />
 
         <ImageView
@@ -56,6 +56,12 @@
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/tvListen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/tvLog"

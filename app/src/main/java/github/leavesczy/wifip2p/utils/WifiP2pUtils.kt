@@ -10,12 +10,12 @@ object WifiP2pUtils {
 
     fun getDeviceStatus(deviceStatus: Int): String {
         return when (deviceStatus) {
-            WifiP2pDevice.AVAILABLE -> "可用的"
-            WifiP2pDevice.INVITED -> "邀请中"
-            WifiP2pDevice.CONNECTED -> "已连接"
-            WifiP2pDevice.FAILED -> "失败的"
-            WifiP2pDevice.UNAVAILABLE -> "不可用的"
-            else -> "未知"
+            WifiP2pDevice.AVAILABLE -> "available"
+            WifiP2pDevice.INVITED -> "Inviting"
+            WifiP2pDevice.CONNECTED -> "Connected"
+            WifiP2pDevice.FAILED -> "Failed"
+            WifiP2pDevice.UNAVAILABLE -> "Unavailable"
+            else -> "Unknown"
         }
     }
 

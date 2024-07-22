@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="搜索设备"
+                android:text="Search for devices"
                 tools:ignore="HardcodedText" />
 
             <Button
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="断开连接"
+                android:text="Disconnect"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -47,14 +47,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:enabled="false"
-            android:text="选择文件"
+            android:text="Select file"
             tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="本设备的信息"
+            android:text="Information about this device"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textSize="18sp"
-            tools:text="小米5X" />
+            tools:text="Xiaomi 5X" />
 
         <TextView
             android:id="@+id/tvConnectionStatus"
@@ -73,13 +73,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textSize="18sp"
-            tools:text="连接状态" />
+            tools:text="Connection status" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="设备列表"
+            android:text="Device list"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />

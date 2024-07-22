@@ -10,12 +10,9 @@ import androidx.lifecycle.viewModelScope
 import github.leavesczy.wifip2p.common.Constants
 import github.leavesczy.wifip2p.common.FileTransfer
 import github.leavesczy.wifip2p.common.FileTransferViewState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -62,18 +59,18 @@ class FileSenderViewModel(context: Application) : AndroidViewModel(context) {
                     val fileTransfer = FileTransfer(fileName = cacheFile.name)
 
                     _fileTransferViewState.emit(value = FileTransferViewState.Connecting)
-                    _log.emit(value = "待发送的文件: $fileTransfer")
-                    _log.emit(value = "开启 Socket")
+                    _log.emit(value = "File to be sent: $fileTransfer")
+                    _log.emit(value = "Enable Socket")
 
                     socket = Socket()
                     socket.bind(null)
 
-                    _log.emit(value = "socket connect，如果三十秒内未连接成功则放弃")
+                    _log.emit(value = "socket connect，Give up if not connected successfully within thirty seconds")
 
                     socket.connect(InetSocketAddress(ipAddress, Constants.PORT), 30000)
 
                     _fileTransferViewState.emit(value = FileTransferViewState.Receiving)
-                    _log.emit(value = "连接成功，开始传输文件")
+                    _log.emit(value = "Connection successful, start transferring files")
 
                     outputStream = socket.getOutputStream()
                     objectOutputStream = ObjectOutputStream(outputStream)
@@ -88,13 +85,13 @@ class FileSenderViewModel(context: Application) : AndroidViewModel(context) {
                         } else {
                             break
                         }
-                        _log.emit(value = "正在传输文件，length : $length")
+                        _log.emit(value = "Transferring files，length : $length")
                     }
-                    _log.emit(value = "文件发送成功")
+                    _log.emit(value = "File sent successfully")
                     _fileTransferViewState.emit(value = FileTransferViewState.Success(file = cacheFile))
                 } catch (e: Throwable) {
                     e.printStackTrace()
-                    _log.emit(value = "异常: " + e.message)
+                    _log.emit(value = "Exception: " + e.message)
                     _fileTransferViewState.emit(value = FileTransferViewState.Failed(throwable = e))
                 } finally {
                     fileInputStream?.close()
@@ -105,6 +102,47 @@ class FileSenderViewModel(context: Application) : AndroidViewModel(context) {
             }
         }
         job?.invokeOnCompletion {
+            job = null
+        }
+    }
+
+    fun sendStringOverSocket(ipAddress: String, jsonString: String) {
+        var job: Job? = null
+
+        if (job != null) {
+            return
+        }
+
+        job = CoroutineScope(Dispatchers.IO).launch {
+            var socket: Socket? = null
+            var outputStream: OutputStream? = null
+            var objectOutputStream: ObjectOutputStream? = null
+
+            try {
+                _fileTransferViewState.emit(value = FileTransferViewState.Connecting)
+                socket = Socket()
+                socket.bind(null)
+
+                socket.connect(InetSocketAddress(ipAddress, Constants.PORT), 30000)
+                _fileTransferViewState.emit(value = FileTransferViewState.Receiving)
+                outputStream = socket.getOutputStream()
+                objectOutputStream = ObjectOutputStream(outputStream)
+                objectOutputStream.writeObject(jsonString)
+
+                println("String sent successfully")
+                // Handle success or emit appropriate state
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                println("Exception: " + e.message)
+                // Handle failure or emit appropriate state
+            } finally {
+                outputStream?.close()
+                objectOutputStream?.close()
+                socket?.close()
+            }
+        }
+
+        job.invokeOnCompletion {
             job = null
         }
     }

@@ -22,4 +22,6 @@ sealed class FileTransferViewState {
 
     data class Failed(val throwable: Throwable) : FileTransferViewState()
 
+    data class SuccessString(val data: String) : FileTransferViewState()
+
 }

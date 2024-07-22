@@ -34,7 +34,7 @@ class MainActivity : BaseActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { it ->
         if (it.all { it.value }) {
-            showToast("已获得全部权限")
+            showToast("All permissions granted")
         } else {
             onPermissionDenied()
         }
@@ -63,7 +63,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun onPermissionDenied() {
-        showToast("缺少权限，请先授予权限")
+        showToast("onPermissionDenied")
     }
 
     private fun allPermissionGranted(): Boolean {

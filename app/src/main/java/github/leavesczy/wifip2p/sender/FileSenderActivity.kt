@@ -106,10 +106,10 @@ class FileSenderActivity : BaseActivity() {
             log("onConnectionInfoAvailable getHostAddress: " + wifiP2pInfo.groupOwnerAddress.hostAddress)
             val stringBuilder = StringBuilder()
             stringBuilder.append("\n")
-            stringBuilder.append("是否群主：")
-            stringBuilder.append(if (wifiP2pInfo.isGroupOwner) "是群主" else "非群主")
+            stringBuilder.append("Are you the group owner：")
+            stringBuilder.append(if (wifiP2pInfo.isGroupOwner) "Is the group owner" else "Not the group owner")
             stringBuilder.append("\n")
-            stringBuilder.append("群主IP地址：")
+            stringBuilder.append("Group owner's IP address：")
             stringBuilder.append(wifiP2pInfo.groupOwnerAddress.hostAddress)
             tvConnectionStatus.text = stringBuilder
             if (wifiP2pInfo.groupFormed && !wifiP2pInfo.isGroupOwner) {
@@ -125,7 +125,7 @@ class FileSenderActivity : BaseActivity() {
             deviceAdapter.notifyDataSetChanged()
             tvConnectionStatus.text = null
             wifiP2pInfo = null
-            showToast("处于非连接状态")
+            showToast("Not connected")
         }
 
         override fun onSelfDeviceAvailable(wifiP2pDevice: WifiP2pDevice) {
@@ -162,19 +162,23 @@ class FileSenderActivity : BaseActivity() {
 
     @SuppressLint("MissingPermission")
     private fun initView() {
-        supportActionBar?.title = "文件发送端"
+        supportActionBar?.title = "File sender"
         btnDisconnect.setOnClickListener {
             disconnect()
         }
         btnChooseFile.setOnClickListener {
-            imagePickerLauncher.launch("image/*")
+//            imagePickerLauncher.launch("image/*")
+            val ipAddress = wifiP2pInfo?.groupOwnerAddress?.hostAddress
+            if (!ipAddress.isNullOrBlank()) {
+                fileSenderViewModel.sendStringOverSocket(ipAddress = ipAddress, mockJsonString)
+            }
         }
         btnDirectDiscover.setOnClickListener {
             if (!wifiP2pEnabled) {
-                showToast("需要先打开Wifi")
+                showToast("Need to turn on Wi-Fi first")
                 return@setOnClickListener
             }
-            showLoadingDialog(message = "正在搜索附近设备")
+            showLoadingDialog(message = "Searching for nearby devices")
             wifiP2pDeviceList.clear()
             deviceAdapter.notifyDataSetChanged()
             wifiP2pManager.discoverPeers(wifiP2pChannel, object : WifiP2pManager.ActionListener {
@@ -247,6 +251,10 @@ class FileSenderActivity : BaseActivity() {
                     is FileTransferViewState.Failed -> {
                         dismissLoadingDialog()
                     }
+
+                    is FileTransferViewState.SuccessString -> {
+                        dismissLoadingDialog()
+                    }
                 }
             }
         }
@@ -269,8 +277,8 @@ class FileSenderActivity : BaseActivity() {
         val wifiP2pConfig = WifiP2pConfig()
         wifiP2pConfig.deviceAddress = wifiP2pDevice.deviceAddress
         wifiP2pConfig.wps.setup = WpsInfo.PBC
-        showLoadingDialog(message = "正在连接，deviceName: " + wifiP2pDevice.deviceName)
-        showToast("正在连接，deviceName: " + wifiP2pDevice.deviceName)
+        showLoadingDialog(message = "Connecting...，deviceName: " + wifiP2pDevice.deviceName)
+        showToast("Connecting，deviceName: " + wifiP2pDevice.deviceName)
         wifiP2pManager.connect(
             wifiP2pChannel,
             wifiP2pConfig,
@@ -280,7 +288,7 @@ class FileSenderActivity : BaseActivity() {
                 }
 
                 override fun onFailure(reason: Int) {
-                    showToast("连接失败 $reason")
+                    showToast("Connection failed $reason")
                     dismissLoadingDialog()
                 }
             }
@@ -313,3 +321,33 @@ class FileSenderActivity : BaseActivity() {
     }
 
 }
+
+private const val mockJsonString = """
+{
+  "customer": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1234567890"
+  },
+  "order": {
+    "orderId": "ORD123456",
+    "orderDate": "2024-07-22T15:30:00Z",
+    "items": [
+      {
+        "itemId": "ITEM001",
+        "itemName": "Product A",
+        "quantity": 2,
+        "pricePerUnit": 25.5
+      },
+      {
+        "itemId": "ITEM002",
+        "itemName": "Product B",
+        "quantity": 1,
+        "pricePerUnit": 50.0
+      }
+    ],
+    "totalAmount": 101.0,
+    "paymentMethod": "Credit Card"
+  }
+}
+"""

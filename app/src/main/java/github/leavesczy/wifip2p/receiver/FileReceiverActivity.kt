@@ -32,6 +32,10 @@ class FileReceiverActivity : BaseActivity() {
         findViewById<ImageView>(R.id.ivImage)
     }
 
+    private val tvListen by lazy {
+        findViewById<TextView>(R.id.tvListen)
+    }
+
     private val tvLog by lazy {
         findViewById<TextView>(R.id.tvLog)
     }
@@ -102,7 +106,7 @@ class FileReceiverActivity : BaseActivity() {
     }
 
     private fun initView() {
-        supportActionBar?.title = "文件接收端"
+        supportActionBar?.title = "File receiver"
         btnCreateGroup.setOnClickListener {
             createGroup()
         }
@@ -110,7 +114,8 @@ class FileReceiverActivity : BaseActivity() {
             removeGroup()
         }
         btnStartReceive.setOnClickListener {
-            fileReceiverViewModel.startListener()
+//            fileReceiverViewModel.startListener()
+            fileReceiverViewModel.startStringListener()
         }
     }
 
@@ -160,6 +165,11 @@ class FileReceiverActivity : BaseActivity() {
 
                         is FileTransferViewState.Failed -> {
                             dismissLoadingDialog()
+                        }
+
+                        is FileTransferViewState.SuccessString -> {
+                            dismissLoadingDialog()
+                            tvListen.text = it.data
                         }
                     }
                 }

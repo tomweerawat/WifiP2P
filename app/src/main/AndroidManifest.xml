@@ -31,7 +31,7 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|layoutDirection|uiMode|locale|keyboard|keyboardHidden"
             android:exported="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,13 +43,13 @@
             android:name=".sender.FileSenderActivity"
             android:configChanges="orientation|screenSize|screenLayout|layoutDirection|uiMode|locale|keyboard|keyboardHidden"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".receiver.FileReceiverActivity"
             android:configChanges="orientation|screenSize|screenLayout|layoutDirection|uiMode|locale|keyboard|keyboardHidden"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
     </application>
 
